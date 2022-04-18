@@ -1,0 +1,4 @@
+FROM claudeducharme/mock-iot-gps-device-awsskdv2:v0.01
+WORKDIR /home/user/certs
+COPY ./certs/* ./
+WORKDIR /home/user/

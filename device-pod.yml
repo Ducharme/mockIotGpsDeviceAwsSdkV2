@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: device
+spec:
+  containers:
+  - name: mock-iot-gps-device-awsskdv2
+    image: <accountid>.dkr.ecr.<region>.amazonaws.com/mock-iot-gps-device-awsskdv2:latest
+    imagePullPolicy: Always
+    env:
+    - name: ENDPOINT
+      value: "<example>-ats.iot.ap-southeast-1.amazonaws.com"
+    - name: TOPIC
+      value: "topic_1"
+    - name: INTERVAL
+      value: "1000"
+    - name: COUNT
+      value: "0"
+    - name: CA_FILE
+      value: "./certs/root-ca.crt"
+    - name: CERT_FILE
+      value: "./certs/certificate.pem.crt"
+    - name: KEY_FILE
+      value: "./certs/private.pem.key"
+    ports:
+    - containerPort: 8883
+    resources:
+      limits:
+        memory: "20Mi"
+      requests:
+        memory: "10Mi"
+
