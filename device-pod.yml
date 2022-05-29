@@ -4,8 +4,8 @@ metadata:
   name: device
 spec:
   containers:
-  - name: mock-iot-gps-device-awsskdv2
-    image: <accountid>.dkr.ecr.<region>.amazonaws.com/mock-iot-gps-device-awsskdv2:latest
+  - name: mock-iot-gps-device-awssdkv2
+    image: <accountid>.dkr.ecr.<region>.amazonaws.com/mock-iot-gps-device-awssdkv2:latest
     imagePullPolicy: Always
     env:
     - name: ENDPOINT

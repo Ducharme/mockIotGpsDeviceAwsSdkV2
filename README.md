@@ -11,12 +11,12 @@ sh ./refresh-local-certs.sh
 
 Build the docker image
 ```
-docker build --tag mock-iot-gps-device-awsskdv2:v0.01 .
+docker build --tag mock-iot-gps-device-awssdkv2:v0.01 .
 ```
 
 Spawn the docker copntainer
 ```
-docker run -it -p 8884:8883 -m 20M mock-iot-gps-device-awsskdv2:v0.01 --endpoint example-ats.iot.us-east-1.amazonaws.com --topic topic_1 --interval 1000 --count 5 --cert_file /home/user/certs/certificate.pem.crt --key_file /home/user/certs/private.pem.key
+docker run -it -p 8884:8883 -m 20M mock-iot-gps-device-awssdkv2:v0.01 --endpoint example-ats.iot.us-east-1.amazonaws.com --topic topic_1 --interval 1000 --count 5 --cert_file /home/user/certs/certificate.pem.crt --key_file /home/user/certs/private.pem.key
 ```
 
 ## Playing around
@@ -24,7 +24,7 @@ docker run -it -p 8884:8883 -m 20M mock-iot-gps-device-awsskdv2:v0.01 --endpoint
 Useful commands
 ```
 npm start --idle true
-docker run --env IDLE=true -t mock-iot-gps-device-awsskdv2:v0.01
+docker run --env IDLE=true -t mock-iot-gps-device-awssdkv2:v0.01
 docker run --detach --rm --env IDLE=true
 ```
 
