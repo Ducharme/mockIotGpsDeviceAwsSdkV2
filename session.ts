@@ -39,6 +39,7 @@ class Session {
             while (true) {
                 await this.publishNow(opIndex, topic, listenToTopic);
                 await sleep(interval);
+                opIndex = opIndex + 1;
             }
         } else {
             for (let opIndex = 0; opIndex < count; ++opIndex) {
