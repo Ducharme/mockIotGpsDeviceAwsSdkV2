@@ -2,6 +2,7 @@ import { io } from 'aws-iot-device-sdk-v2';
 import { exit } from 'process';
 import { DeviceProperties, GpsLocation, Device } from './device';
 import { Args, InputValues, getEnvVars, getCmdArgs } from './inputValues';
+import * as fs from 'fs';
 
 const yargs = require('yargs');
 var argv = require('yargs/yargs')(process.argv.slice(2))
@@ -62,16 +63,21 @@ async function main(cmdArgs: Args) {
     const aci = args.client_id;
     var hasClientId = aci !== undefined && aci !== null && aci.length > 0;
     var clientId = hasClientId ? args.client_id : "test-" + Math.floor(Math.random() * 100000000);
+    const argTopic = args.topic.replace("+", clientId);
+    const fv = "0.0.1";
     let devCfg: DeviceProperties = {
         deviceId: clientId,
-        firmwareVersion: "0.0.1",
+        firmwareVersion: fv,
         pingIntervalInMs: args.interval,
         pingTargetCount: args.count,
-        publishToTopic: args.topic
+        publishToTopic: argTopic
     };
     var maxGracePeriod = 5000;
     var expectedLifespan = devCfg.pingIntervalInMs * devCfg.pingTargetCount;
     var maxLifespan = expectedLifespan > 0 ? expectedLifespan + maxGracePeriod : 0;
+    var certId = fs.readFileSync('./certs/certificate-id.txt', 'utf8');
+    console.log(`Values clientId:${clientId}, topic:${argTopic}, firmwareVersion:${fv}, `
+        + `maxGracePeriod:${maxGracePeriod}, maxLifespan:${maxLifespan}, certificateId:${certId}`);
 
     let gpsLoc: GpsLocation = { latitude: defaultLatitude, longitude: defaultLongitude, altitude: defaultAltitude };
 

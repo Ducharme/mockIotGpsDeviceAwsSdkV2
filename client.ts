@@ -54,7 +54,7 @@ async function connect() {
     connection.on('disconnect', () => { console.log('Client has disconnected');} );
     connection.on('error', (err) => { console.log('Client is in a bad state: ' + err);} );
     connection.on('interrupt', (err) => { console.log('Client was interrupted: ' + err);} );
-    connection.on('resume', (err, msg) => { console.log('Client is resuming: ' + err + " &  msg:" + msg);} );
+    connection.on('resume', (err, msg) => { console.log('Client is resuming: ' + err + " & msg:" + msg);} );
     connection.on('message', (msg) => { console.log('Client is messaged: ' + msg);} );
 
     await connection.connect();

@@ -33,7 +33,7 @@ function handleArgs(yargs: any) {
             alias: 't',
             description: 'STRING: Targeted topic',
             type: 'string',
-            //default: 'topic_1'
+            //default: 'lafleet/devices/location/+/streaming'
         })
         .option('count', {
             alias: 'n',

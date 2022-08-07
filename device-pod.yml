@@ -11,7 +11,7 @@ spec:
     - name: ENDPOINT
       value: "<example>-ats.iot.ap-southeast-1.amazonaws.com"
     - name: TOPIC
-      value: "topic_1"
+      value: "lafleet/devices/location/+/streaming"
     - name: INTERVAL
       value: "1000"
     - name: COUNT

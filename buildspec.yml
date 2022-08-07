@@ -31,10 +31,10 @@ phases:
       - docker cp $containerid:/home/user/certs/ certs/
       - docker cp $containerid:/home/user/dist/ dist/
       - docker cp $containerid:/home/user/node_modules/ node_modules/
-      - docker stop -t 10 $containerid || echo "Container stopped/killed"
+      - docker rm -v $containerid
 
 artifacts:
-  name: dt3_$(date +%Y-%m-%d)_$CODEBUILD_BUILD_NUMBER.zip
+  name: migd_$(date +%Y-%m-%d)_$CODEBUILD_BUILD_NUMBER.zip
   files:
     - 'certs/*.*'
     - 'dist/*.*'
