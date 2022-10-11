@@ -12,6 +12,8 @@ const MinLongitude: number = -180;
 const WrapLongitude: number = MaxLongitude * 2;
 const WrapLatitude: number = MaxLatitude * 2;
 
+enum DeviceState { STOPPED='STOPPED', PASSIVE='PASSIVE', ACTIVE='ACTIVE', WAITING='WAITING' };
+
 
 // Math.random() function returns a floating-point, pseudo-random number 
 // in the range 0 to less than 1 (inclusive of 0, but not 1) with 
@@ -34,6 +36,9 @@ class Device {
     protected location: GpsLocation;
     protected properties: DeviceProperties;
 	protected batteryLevel: number;
+    protected state: DeviceState = DeviceState.STOPPED;
+    private streamId : number = -1;
+    private seq : number = -1;
     private randomIndex: number = 0;
 
     constructor(loc: GpsLocation, props: DeviceProperties) {
@@ -42,7 +47,57 @@ class Device {
         this.batteryLevel = 100;
     }
 
-    Move(latitudeDelta: number, longitudeDelta: number, altitudeDelta: number) {
+    setStreamId(streamId: number) {
+        this.streamId = streamId;
+    }
+
+    setSequence(seq: number) {
+        this.seq = seq == Number.MAX_SAFE_INTEGER ? 0 : seq;
+    }
+
+    changeStateToActive() {
+        this.state = DeviceState.ACTIVE;
+    }
+
+    changeStateToPassive() {
+        this.state = DeviceState.PASSIVE;
+    }
+
+    changeStateToWaiting() {
+        this.state = DeviceState.WAITING;
+    }
+
+    changeStateToStopped() {
+        this.state = DeviceState.STOPPED;
+    }
+
+    getState() {
+        return this.state;
+    }
+
+    getPayload() {
+        var loc = this.getLocation();
+        this.seq = this.seq == Number.MAX_SAFE_INTEGER ? 0 : this.seq + 1;
+        const now = Date.now();
+        const msg = {
+            deviceId: this.getProperties().deviceId,
+            streamId: this.streamId,
+            state: this.getState(),
+            ts: now,
+            fv: this.getProperties().firmwareVersion,
+            batt: this.getBatteryLevel(),
+            gps: {
+                lat: loc.latitude,
+                lng: loc.longitude,
+                alt: loc.altitude
+            },
+            seq: this.seq
+        };
+
+        return msg;
+    }
+
+    move(latitudeDelta: number, longitudeDelta: number, altitudeDelta: number) {
         var newLatitude = this.location.latitude + latitudeDelta;
         if (newLatitude > MaxLatitude) {
             newLatitude -= WrapLatitude;
@@ -67,13 +122,13 @@ class Device {
         this.location.altitude = newAltitude;
     }
 
-    MoveRandomly() {
+    moveRandomly() {
         var randomNumber = RandomNumbers[this.randomIndex++];
         if (this.randomIndex === RandomNumbers.length) {
             this.randomIndex = 0;
         }
         
-        this.Move(randomNumber, randomNumber, randomNumber);
+        this.move(randomNumber, randomNumber, randomNumber);
     }
 
     public getLocation() {

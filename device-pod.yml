@@ -10,8 +10,12 @@ spec:
     env:
     - name: ENDPOINT
       value: "<example>-ats.iot.ap-southeast-1.amazonaws.com"
-    - name: TOPIC
+    - name: STREAMING_LOCATION_TOPIC
       value: "lafleet/devices/location/+/streaming"
+    - name: STREAMID_REQUEST_TOPIC
+      value: "lafleet/devices/streamId/+/request"
+    - name: STREAMID_REPLY_TOPIC
+      value: "lafleet/devices/streamId/+/reply"
     - name: INTERVAL
       value: "1000"
     - name: COUNT

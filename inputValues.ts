@@ -6,7 +6,9 @@ export type Args = { [index: string]: any };
 
 export interface InputValues {
     endpoint : string;
-    topic : string;
+    streamingLocationTopic : string;
+    streamIdRequestTopic : string,
+    streamIdReplyTopic : string,
     interval :number;
     count : number;
     message : string;
@@ -40,7 +42,9 @@ function getBooleanOrDefault(str : string | undefined, defaultValue : boolean) :
 export function getEnvVars () : InputValues {
     return {
         endpoint : process.env.ENDPOINT as string,
-        topic : process.env.TOPIC as string,
+        streamingLocationTopic : process.env.STREAMING_LOCATION_TOPIC as string,
+        streamIdRequestTopic : process.env.STREAMID_REQUEST_TOPIC as string,
+        streamIdReplyTopic : process.env.STREAMID_REPLY_TOPIC as string,
         interval : getNumberOrDefault(process.env.INTERVAL, defaultInterval),
         count : getNumberOrDefault(process.env.COUNT, defaultCount),
         message : process.env.MESSAGE as string,
@@ -61,7 +65,9 @@ export function getEnvVars () : InputValues {
 export function getCmdArgs (cmdArgs: Args) : InputValues {
     return {
         endpoint : cmdArgs.endpoint as string,
-        topic : cmdArgs.topic as string,
+        streamingLocationTopic : cmdArgs.streamingLocationTopic as string,
+        streamIdRequestTopic : cmdArgs.streamIdRequestTopic as string,
+        streamIdReplyTopic : cmdArgs.streamIdReplyTopic as string,
         interval : cmdArgs.interval,
         count : cmdArgs.count as number,
         message : cmdArgs.message as string,

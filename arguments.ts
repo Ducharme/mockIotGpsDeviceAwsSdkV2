@@ -29,11 +29,23 @@ function handleArgs(yargs: any) {
             description: 'Client ID for MQTT connection.',
             type: 'string'
         })
-        .option('topic', {
+        .option('streamingLocationTopic', {
             alias: 't',
-            description: 'STRING: Targeted topic',
+            description: 'STRING: Targeted streamingLocationTopic',
             type: 'string',
             //default: 'lafleet/devices/location/+/streaming'
+        })
+        .option('streamIdRequestTopic', {
+            alias: 'q',
+            description: 'STRING: StreamId Request topic',
+            type: 'string',
+            //default: 'lafleet/devices/streamId/+/request'
+        })
+        .option('streamIdReplyTopic', {
+            alias: 'p',
+            description: 'STRING: StreamId Reply topic',
+            type: 'string',
+            //default: 'lafleet/devices/streamId/+/reply'
         })
         .option('count', {
             alias: 'n',

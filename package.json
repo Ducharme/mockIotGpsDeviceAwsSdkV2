@@ -1,6 +1,6 @@
 {
     "name": "mock-iot-gps-device-awssdkv2",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "LaFleet - Emulated IoT GPS Device based on aws-iot-device-sdk-v2",
     "homepage": "https://github.com/Ducharme/mock-iot-gps-device-awssdkv2",
     "keywords": [ "aws", "iot", "lafleet" ],
@@ -21,7 +21,7 @@
         "refresh:certs": "sh refresh-local-certs.sh"
     },
     "dependencies": {
-        "aws-iot-device-sdk-v2": "^1.4.1",
+        "aws-iot-device-sdk-v2": "^1.8.9",
         "yargs": "^14.2.3"
     },
     "devDependencies": {
