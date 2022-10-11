@@ -38,6 +38,7 @@ class Device {
 	protected batteryLevel: number;
     protected state: DeviceState = DeviceState.STOPPED;
     private streamId : number = -1;
+    private seq : number = -1;
     private randomIndex: number = 0;
 
     constructor(loc: GpsLocation, props: DeviceProperties) {
@@ -48,6 +49,10 @@ class Device {
 
     setStreamId(streamId: number) {
         this.streamId = streamId;
+    }
+
+    setSequence(seq: number) {
+        this.seq = seq == Number.MAX_SAFE_INTEGER ? 0 : seq;
     }
 
     changeStateToActive() {
@@ -70,9 +75,9 @@ class Device {
         return this.state;
     }
 
-    getPayload(index: number) {
-        
+    getPayload() {
         var loc = this.getLocation();
+        this.seq = this.seq == Number.MAX_SAFE_INTEGER ? 0 : this.seq + 1;
         const now = Date.now();
         const msg = {
             deviceId: this.getProperties().deviceId,
@@ -86,8 +91,9 @@ class Device {
                 lng: loc.longitude,
                 alt: loc.altitude
             },
-            seq: index + 1
+            seq: this.seq
         };
+
         return msg;
     }
 
