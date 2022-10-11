@@ -53,7 +53,8 @@ async function main(cmdArgs: Args) {
     }
 
     console.log("Starting based on values from " + (useEnvVar ? "Env Vars" : "Cmd Args"));
-    console.log(`Values endpoint:${args.endpoint}, topic:${args.topic}, `
+    console.log(`Values endpoint:${args.endpoint}, `
+        + `streamIdRequestTopic:${args.streamIdRequestTopic}, streamIdReplyTopic:${args.streamIdReplyTopic}, `
         + `interval:${args.interval}, count:${args.count}, `
         + `message:${args.message}, idle:${args.idle}, `
         + `client_id:${args.client_id}, use_websocket:${args.use_websocket}, signing_region:${args.signing_region}, `
@@ -62,8 +63,8 @@ async function main(cmdArgs: Args) {
 
     const aci = args.client_id;
     var hasClientId = aci !== undefined && aci !== null && aci.length > 0;
-    var clientId = hasClientId ? args.client_id : "test-" + Math.floor(Math.random() * 100000000);
-    const argTopic = args.topic.replace("+", clientId);
+    var clientId = hasClientId ? args.client_id : "client-" + Math.floor(Math.random() * 100000000);
+    const argTopic = args.streamingLocationTopic.replace("+", clientId);
     const fv = "0.0.1";
     let devCfg: DeviceProperties = {
         deviceId: clientId,
@@ -76,22 +77,24 @@ async function main(cmdArgs: Args) {
     var expectedLifespan = devCfg.pingIntervalInMs * devCfg.pingTargetCount;
     var maxLifespan = expectedLifespan > 0 ? expectedLifespan + maxGracePeriod : 0;
     var certId = fs.readFileSync('./certs/certificate-id.txt', 'utf8');
-    console.log(`Values clientId:${clientId}, topic:${argTopic}, firmwareVersion:${fv}, `
+    console.log(`Values clientId:${clientId}, streamingLocationTopic:${argTopic}, firmwareVersion:${fv}, `
         + `maxGracePeriod:${maxGracePeriod}, maxLifespan:${maxLifespan}, certificateId:${certId}`);
 
     let gpsLoc: GpsLocation = { latitude: defaultLatitude, longitude: defaultLongitude, altitude: defaultAltitude };
 
     var dev = new Device(gpsLoc, devCfg);
-    await client.configure(args, clientId, maxLifespan);
-    await client.connect();
+    const c = new client.Client(args, dev, clientId, maxLifespan);
+    await c.connect();
+    await c.init();
+    dev.changeStateToActive();
     var tsStart = Date.now();
-    await client.run(dev, false);
-    
+    await c.execute(false);
+
     var tsEnd = Date.now();
     var td = (tsEnd - tsStart) - args.interval;
     var expected = devCfg.pingTargetCount * devCfg.pingIntervalInMs;
     var diff = td - expected;
-    await client.disconnect();
+    await c.disconnect();
 
     console.log(`Published within ${td} ms ${devCfg.pingTargetCount} updates at ${devCfg.pingIntervalInMs} ms interval`);
     console.log(`Expectation was ${expected} ms so difference is ${diff} ms`);

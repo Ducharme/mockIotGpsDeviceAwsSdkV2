@@ -2,7 +2,9 @@
 
 ENV_FILE=$1
 ENDPOINT=$(grep ENDPOINT $ENV_FILE | cut -d '=' -f2)
-TOPIC=$(grep TOPIC $ENV_FILE | cut -d '=' -f2)
+STREAMING_LOCATION_TOPIC=$(grep STREAMING_LOCATION_TOPIC $ENV_FILE | cut -d '=' -f2)
+STREAMID_REQUEST_TOPIC=$(grep STREAMID_REQUEST_TOPIC $ENV_FILE | cut -d '=' -f2)
+STREAMID_REPLY_TOPIC=$(grep STREAMID_REPLY_TOPIC $ENV_FILE | cut -d '=' -f2)
 INTERVAL=$(grep INTERVAL $ENV_FILE | cut -d '=' -f2)
 COUNT=$(grep COUNT $ENV_FILE | cut -d '=' -f2)
 #MESSAGE=$(grep MESSAGE $ENV_FILE | cut -d '=' -f2)
@@ -21,5 +23,5 @@ KEY_FILE=$(grep KEY_FILE $ENV_FILE | cut -d '=' -f2)
 
 # --idle $IDLE --use_websocket $USE_WEBSOCKET --signing_region $SIGNING_REGION
 # --proxy_host $PROXY_HOST --proxy_port $PROXY_PORT --verbosity $VERBOSITY
-echo dist/main.js --endpoint $ENDPOINT --topic $TOPIC --count $COUNT --interval $INTERVAL --ca_file $CA_FILE --cert_file $CERT_FILE --key_file $KEY_FILE
-node dist/main.js --endpoint $ENDPOINT --topic $TOPIC --count $COUNT --interval $INTERVAL --ca_file $CA_FILE --cert_file $CERT_FILE --key_file $KEY_FILE
+echo dist/main.js --endpoint $ENDPOINT --streamingLocationTopic $STREAMING_LOCATION_TOPIC --streamIdRequestTopic $STREAMID_REQUEST_TOPIC --streamIdReplyTopic $STREAMID_REPLY_TOPIC --count $COUNT --interval $INTERVAL --ca_file $CA_FILE --cert_file $CERT_FILE --key_file $KEY_FILE
+node dist/main.js --endpoint $ENDPOINT --streamingLocationTopic $STREAMING_LOCATION_TOPIC --streamIdRequestTopic $STREAMID_REQUEST_TOPIC --streamIdReplyTopic $STREAMID_REPLY_TOPIC --count $COUNT --interval $INTERVAL --ca_file $CA_FILE --cert_file $CERT_FILE --key_file $KEY_FILE
