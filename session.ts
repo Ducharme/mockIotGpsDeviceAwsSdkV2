@@ -72,14 +72,14 @@ class Session {
             var opIndex : number = 0;
             const sleep = (ms : number) => new Promise(r => setTimeout(r, ms));
             while (true) {
-                await this.publishNow(opIndex, topic, listenToTopic);
+                await this.publishNow(topic, listenToTopic);
                 await sleep(interval);
                 opIndex = opIndex + 1;
             }
         } else {
             for (let opIndex = 0; opIndex < count; ++opIndex) {
                 const publish = async () => {
-                    await this.publishNow(opIndex, topic, listenToTopic);
+                    await this.publishNow(topic, listenToTopic);
                 };
                 setTimeout(publish, opIndex * interval);
             }
@@ -91,9 +91,9 @@ class Session {
         }
     }
 
-    private async publishNow(index: number, topic: string, listenToTopic: boolean) {
+    private async publishNow(topic: string, listenToTopic: boolean) {
         this.dev.moveRandomly();
-        const msg = this.dev.getPayload(index);
+        const msg = this.dev.getPayload();
         const json = JSON.stringify(msg);
         if (!listenToTopic) {
             console.log(json);
@@ -127,7 +127,8 @@ class Session {
             const json = JSON.parse(text);
             console.log(`Message received on topic ${receivedTopic} ${JSON.stringify(json)} (dup:${dup} qos:${qos} retain:${retain})`);
             this.dev.setStreamId(json.streamId);
-            resolve("Received streamId " + json.streamId);
+            this.dev.setSequence(json.seq);
+            resolve(`Received streamId ${json.streamId} and seq ${json.seq}`);
         };
 
         const top = this.replyTopic.replace("+", this.dev.getProperties().deviceId);
