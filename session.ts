@@ -9,6 +9,8 @@ class Session {
     private dev: Device;
     private requestTopic: string;
     private replyTopic: string;
+    private readonly waitTime : number = 10*1000;
+    private requestTimeout: NodeJS.Timeout = setTimeout(() => {}, 0);
 
     constructor(connection: mqtt.MqttClientConnection, device: Device, requestTopic: string, replyTopic: string) {
         this.conn = connection;
@@ -18,6 +20,7 @@ class Session {
     }
 
     public async init() {
+        
         return new Promise(async (resolve, reject) => {
             try {
                 await this.listenToStreamIdReply(resolve);
@@ -129,6 +132,7 @@ class Session {
             this.dev.setStreamId(json.streamId);
             this.dev.setSequence(json.seq);
             resolve(`Received streamId ${json.streamId} and seq ${json.seq}`);
+            clearTimeout(this.requestTimeout);
         };
 
         const top = this.replyTopic.replace("+", this.dev.getProperties().deviceId);
@@ -142,6 +146,10 @@ class Session {
         const json = JSON.stringify(msg);
         var res = await this.conn.publish(top, json, mqtt.QoS.AtLeastOnce);
         console.log(`Publishing to ${top} returned ${JSON.stringify(res)}`);
+
+        clearTimeout(this.requestTimeout);
+        console.debug(`Waiting ${this.waitTime} ms to request next streamId again`);
+        this.requestTimeout = setTimeout( () => this.requestNextStreamId(), this.waitTime );
     }
 }
 

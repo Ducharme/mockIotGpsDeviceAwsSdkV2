@@ -35,6 +35,7 @@ class Client {
         config_builder.with_clean_session(false);
         config_builder.with_client_id(clientId);
         config_builder.with_endpoint(argv.endpoint);
+        config_builder.with_keep_alive_seconds(60);
     
         if (timeoutToAbortInMs > 0) {
             // force node to wait 60 seconds before killing itself, promises do not keep node alive
